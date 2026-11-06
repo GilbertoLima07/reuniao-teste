@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B2A5B">
+<meta name="robots" content="noindex, nofollow">
+<title>Sua reunião · e-Auditoria</title>
+<meta property="og:title" content="Sua reunião com a e-Auditoria está preparada">
+<meta property="og:description" content="Pauta, horário, especialista e acesso à reunião em um só lugar.">
+<meta property="og:type" content="website">
+<style>
+/* ============ TOKENS — troque aqui pela identidade oficial ============ */
+:root{
+  --brand-900:#0A2350; --brand-800:#0D2F69; --brand-700:#123E8A; --brand-600:#1A52B8; --brand-500:#2563D9;
+  --brand-100:#DCE7FA; --brand-50:#EEF3FC; --brand-accent:#7FB0FF;
+  --ink:#0E1A2E; --ink-2:#2A3A55; --muted:#5E6E87; --faint:#8C99AE;
+  --line:#E2E8F1; --line-2:#EDF1F7; --bg:#F4F6FA; --card:#FFFFFF;
+  --ok:#0F7A55; --ok-50:#E7F5EE; --ok-100:#C9EBD9;
+  --warn:#9A5B00; --warn-50:#FFF5E5;
+  --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --shadow:0 1px 2px rgba(14,26,46,.04),0 10px 28px -14px rgba(14,26,46,.16);
+  --shadow-lg:0 2px 4px rgba(14,26,46,.05),0 30px 60px -24px rgba(10,35,80,.35);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+svg{flex:none}
+
+/* ============ PÁGINA DO CONTADOR ============ */
+.ribbon{background:var(--warn-50);color:var(--warn);font-size:13px;font-weight:600;text-align:center;padding:8px 12px;border-bottom:1px solid #F3DDB3}
+.pg{min-height:100vh;padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+.hero{position:relative;color:#fff;padding:18px 20px 76px;overflow:hidden;
+  background:radial-gradient(110% 70% at 100% 0%,rgba(46,110,230,.55) 0%,transparent 60%),radial-gradient(80% 60% at 0% 100%,rgba(18,62,138,.6) 0%,transparent 70%),linear-gradient(165deg,var(--brand-800),var(--brand-900))}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1.2px);background-size:18px 18px;
+  -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.85),transparent 80%);mask-image:linear-gradient(180deg,rgba(0,0,0,.85),transparent 80%)}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:340px;height:340px;border-radius:50%;border:1px solid rgba(255,255,255,.08);box-shadow:0 0 0 40px rgba(255,255,255,.025),0 0 0 90px rgba(255,255,255,.02);pointer-events:none}
+.hero-in{position:relative;z-index:1;max-width:600px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:30px}
+.wordmark{font-weight:700;letter-spacing:-.01em;font-size:17px;display:flex;align-items:center;gap:9px}
+.wordmark i{width:8px;height:8px;border-radius:50%;background:var(--brand-accent);box-shadow:0 0 0 4px rgba(127,176,255,.18)}
+.badge{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);white-space:nowrap}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:#FFC870}
+.badge.ok .dot{background:#4BD08B}
+.badge.live .dot{background:#FF6B6B;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#A9C6FF;margin:0 0 10px}
+.hero h1{font-size:clamp(28px,7.6vw,40px);line-height:1.1;letter-spacing:-.028em;margin:0 0 14px;font-weight:700;text-wrap:balance}
+.office{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#DCE7FA;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);padding:6px 11px;border-radius:10px;margin-bottom:14px}
+.hero p.lead{font-size:16.5px;color:rgba(255,255,255,.84);margin:0 0 22px;max-width:50ch}
+.meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tile{background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.14);border-radius:var(--r-md);padding:12px 14px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.tile small{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.62);font-weight:700;margin-bottom:3px}
+.tile b{font-size:15.5px;font-weight:600;letter-spacing:-.005em}
+.count{margin-top:14px;display:flex;align-items:center;gap:9px;font-size:14px;color:rgba(255,255,255,.82)}
+.count strong{color:#fff;font-variant-numeric:tabular-nums;font-weight:650}
+
+.wrap{max-width:600px;margin:-50px auto 0;padding:0 14px;position:relative;z-index:2;display:grid;gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);padding:22px 20px;scroll-margin-top:16px}
+.card h2{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+.card h2::before{content:"";width:14px;height:2px;border-radius:2px;background:var(--brand-500)}
+.card h3{font-size:21px;letter-spacing:-.018em;margin:0 0 6px;line-height:1.22}
+.sub{color:var(--muted);font-size:15px;margin:0 0 14px}
+
+.spec{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.avatar{position:relative;width:58px;height:58px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:700;font-size:20px;color:#fff;background:linear-gradient(135deg,var(--brand-500),var(--brand-800));overflow:hidden;box-shadow:0 0 0 3px #fff,0 0 0 4px var(--brand-100)}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.spec b{display:block;font-size:17.5px;letter-spacing:-.01em}
+.spec span{color:var(--muted);font-size:14px}
+.waiting{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ok);font-weight:600;margin-top:3px}
+.waiting::before{content:"";width:7px;height:7px;border-radius:50%;background:#2BB673;box-shadow:0 0 0 3px rgba(43,182,115,.18)}
+.video{position:relative;aspect-ratio:16/9;border-radius:var(--r-md);overflow:hidden;background:linear-gradient(135deg,var(--brand-700),var(--brand-900));margin-bottom:14px}
+.video .vplay{position:absolute;inset:0;width:100%;border:0;background:transparent;cursor:pointer;display:grid;place-items:center;color:#fff;padding:0}
+.video img.cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6}
+.play{position:relative;width:66px;height:66px;border-radius:50%;background:rgba(255,255,255,.96);display:grid;place-items:center;box-shadow:0 12px 30px rgba(0,0,0,.28);transition:transform .2s}
+.vplay:hover .play{transform:scale(1.06)}
+.vlabel{position:absolute;left:14px;bottom:12px;font-size:13px;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+.video iframe,.video video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.bubble{position:relative;background:var(--brand-50);border:1px solid var(--brand-100);border-radius:4px 18px 18px 18px;padding:14px 16px;color:var(--ink-2);font-size:15.5px}
+
+.label{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+.chip{display:flex;align-items:baseline;gap:7px;padding:10px 13px;border-radius:12px;background:var(--bg);border:1px solid var(--line)}
+.chip b{font-size:21px;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--brand-700)}
+.chip span{font-size:13px;color:var(--muted)}
+.quote{border-left:3px solid var(--brand-500);padding:2px 0 2px 14px;margin:0 0 18px}
+.quote small{display:block;color:var(--muted);font-size:12.5px;margin-bottom:3px;font-weight:600}
+.quote p{margin:0;font-size:16px;font-style:italic;color:var(--ink)}
+.checks{list-style:none;padding:0;margin:0;display:grid;gap:11px}
+.checks li{display:flex;gap:11px;font-size:15.5px;color:var(--ink-2)}
+.checks li::before{content:"";flex:none;width:21px;height:21px;margin-top:1px;border-radius:7px;border:1px solid var(--brand-100);
+  background:var(--brand-50) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.2 2.2 4.8-4.8' fill='none' stroke='%231A52B8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/12px no-repeat}
+
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 18px 46px;counter-increment:s;font-size:14.5px;color:var(--muted)}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-3px;width:31px;height:31px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;color:var(--brand-700);background:var(--brand-50);border:1px solid var(--brand-100)}
+.steps li::after{content:"";position:absolute;left:15px;top:31px;bottom:0;width:1px;background:var(--line)}
+.steps li:last-child{padding-bottom:0}.steps li:last-child::after{display:none}
+.steps li b{display:block;color:var(--ink);font-weight:650;font-size:15.5px;margin-bottom:1px}
+.note{margin-top:18px;padding:12px 14px;border-radius:12px;background:var(--bg);font-size:14px;color:var(--ink-2);display:flex;gap:10px}
+
+.opts{display:grid;gap:8px;margin:0 0 16px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt label{display:flex;align-items:center;gap:12px;padding:13px 14px;border:1px solid var(--line);border-radius:12px;cursor:pointer;font-size:15px;transition:border-color .15s,background .15s}
+.opt label::before{content:"";width:18px;height:18px;border-radius:50%;border:1.5px solid #B7C3D6;flex:none;transition:border .15s;box-sizing:border-box}
+.opt input:checked+label{border-color:var(--brand-500);background:var(--brand-50);color:var(--ink)}
+.opt input:checked+label::before{border:5.5px solid var(--brand-600)}
+.opt input:focus-visible+label{outline:2px solid var(--brand-500);outline-offset:2px}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:54px;padding:13px 18px;border-radius:14px;border:1px solid transparent;font-weight:650;font-size:16px;text-decoration:none;cursor:pointer;text-align:center;transition:transform .12s,background .15s,box-shadow .2s,border-color .15s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.985)}
+.btn-primary{background:var(--brand-600);color:#fff;box-shadow:0 10px 22px -10px rgba(26,82,184,.7)}
+.btn-primary:hover{background:var(--brand-700)}
+.btn-ghost{background:#fff;border-color:var(--line);color:var(--ink)}
+.btn-ghost:hover{border-color:#C9D3E2;background:var(--bg)}
+.btn[aria-disabled=true]{background:var(--line-2);color:var(--faint);box-shadow:none;cursor:not-allowed}
+.btn-sm{min-height:46px;font-size:14.5px;padding:10px 14px;border-radius:12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.row .btn-sm{white-space:nowrap;padding:10px 10px;gap:7px}
+@media(max-width:430px){.row .btn-sm svg{display:none}.row .btn-sm{font-size:14px}}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin:10px 0 4px}
+.textlink{display:inline-block;margin-top:14px;font-size:14px;color:var(--brand-600);font-weight:600;text-decoration:none}
+.success{display:flex;gap:14px;align-items:flex-start;padding:16px;border-radius:14px;background:var(--ok-50);border:1px solid var(--ok-100);margin-bottom:16px;animation:pop .35s ease}
+@keyframes pop{from{transform:scale(.97);opacity:0}to{transform:none;opacity:1}}
+.success .ic{width:38px;height:38px;border-radius:50%;background:var(--ok);display:grid;place-items:center;flex:none}
+.success b{display:block;color:#0B5E42;font-size:16.5px}
+.success p{margin:3px 0 0;color:#2D5E4C;font-size:14.5px}
+.teams.hot{animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,99,217,.5)}70%{box-shadow:0 0 0 14px rgba(37,99,217,0)}100%{box-shadow:0 0 0 0 rgba(37,99,217,0)}}
+.small{font-size:13.5px;color:var(--muted);margin:10px 0 0}
+.divider{height:1px;background:var(--line-2);margin:18px 0 14px}
+
+details{border-top:1px solid var(--line-2)}
+details:first-of-type{border-top:0}
+summary{list-style:none;cursor:pointer;padding:14px 0;font-weight:600;font-size:15px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:22px;line-height:1;color:var(--faint);font-weight:400;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p,details ol{margin:0 0 14px;color:var(--ink-2);font-size:14.5px}
+details ol{padding-left:20px;display:grid;gap:4px}
+
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:rgba(255,255,255,.9);-webkit-backdrop-filter:saturate(1.4) blur(14px);backdrop-filter:saturate(1.4) blur(14px);border-top:1px solid var(--line)}
+.bar-in{max-width:600px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.bar .info{flex:none;max-width:42%;line-height:1.25}
+.bar small{display:block;font-size:12px;color:var(--muted)}
+.bar strong{font-size:14.5px;letter-spacing:-.005em}
+.bar .btn{flex:1;min-height:50px;font-size:15.5px}
+
+.foot{max-width:600px;margin:24px auto 0;padding:0 24px;text-align:center;font-size:12.5px;color:var(--faint)}
+.err{max-width:460px;margin:18vh auto;padding:0 24px;text-align:center}
+.err h1{font-size:24px;letter-spacing:-.02em}
+.err p{color:var(--muted)}
+
+.toast{position:fixed;bottom:calc(96px + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,16px);background:var(--ink);color:#fff;padding:11px 16px;border-radius:12px;font-size:14px;opacity:0;transition:.22s;z-index:60;pointer-events:none;max-width:calc(100% - 32px);text-align:center;box-shadow:var(--shadow-lg)}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ============ GERADOR ============ */
+.gen{max-width:1260px;margin:0 auto;padding:28px 20px 70px;display:grid;gap:22px}
+@media(min-width:1060px){.gen{grid-template-columns:minmax(0,1fr) 410px;align-items:start}.gen-side{position:sticky;top:18px}}
+.gen-head{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.gen-head .k{font-size:12.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand-600)}
+.gen-head h1{font-size:30px;letter-spacing:-.025em;margin:4px 0 6px;line-height:1.15}
+.gen-head p{margin:0;color:var(--muted);max-width:68ch}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.flow span{font-size:13px;padding:6px 11px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--ink-2)}
+.flow span b{color:var(--brand-600);margin-right:5px}
+.gen-main{display:grid;gap:14px}
+.fgrid{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+.f{display:grid;gap:6px;align-content:start}.f.full{grid-column:1/-1}
+.f label{font-size:13px;font-weight:600;color:var(--ink-2)}
+.f label em{font-style:normal;font-weight:500;color:var(--faint)}
+.f label .req{color:#C2410C}
+.f input,.f select,.f textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s;font-size:15px}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--brand-500);box-shadow:0 0 0 3px rgba(37,99,217,.15)}
+.f textarea{min-height:90px;resize:vertical}
+.f .help{font-size:12.5px;color:var(--muted)}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--brand-700);background:var(--brand-50);border:1px solid var(--brand-100);padding:2px 7px;border-radius:6px;margin-left:8px;vertical-align:2px}
+.suggest{display:none;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:var(--brand-700);background:var(--brand-50);border:1px solid var(--brand-100);padding:9px 11px;border-radius:10px;grid-column:1/-1}
+.suggest.on{display:flex}
+.suggest button{border:0;background:var(--brand-600);color:#fff;border-radius:8px;padding:6px 11px;font-weight:650;cursor:pointer;font-size:12.5px;white-space:nowrap}
+.gen-side{display:grid;gap:14px}
+.phone{background:#0E1A2E;border-radius:38px;padding:10px;box-shadow:var(--shadow-lg)}
+.phone iframe{display:block;width:100%;height:700px;border:0;border-radius:29px;background:#fff}
+.linkbox{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;word-break:break-all;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;max-height:74px;overflow:auto;color:var(--ink-2)}
+.msgbox{white-space:pre-wrap;font-size:14px;background:#E2F7E9;border:1px solid #C5ECD3;border-radius:4px 14px 14px 14px;padding:12px 14px;color:#173B27;word-break:break-word}
+.issues{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:6px}
+.issues li{font-size:13px;color:var(--warn);background:var(--warn-50);padding:8px 10px;border-radius:8px}
+.issues li.good{color:var(--ok);background:var(--ok-50)}
+.meta-line{font-size:12px;color:var(--faint);margin-top:6px}
+.protocol ol{margin:0;padding-left:20px;color:var(--ink-2);font-size:14.5px;display:grid;gap:8px}
+.privacy{font-size:13px;color:var(--muted);display:flex;gap:10px;margin-top:2px}
+.gen-actions{display:flex;flex-wrap:wrap;gap:8px}
+.gen-actions .btn{width:auto;flex:1;min-width:150px;white-space:nowrap}
+
+@media(max-width:640px){.fgrid{grid-template-columns:1fr}.gen-head h1{font-size:25px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+'use strict';
+var TZ='America/Sao_Paulo';
+var app=document.getElementById('app');
+var HERE=location.href.split('#')[0];
+var timer=null;
+
+/* ---------- utilidades ---------- */
+function $(s,r){return (r||document).querySelector(s)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+var enc=encodeURIComponent;
+var store={get:function(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+function first(s){return String(s||'').trim().split(/\s+/)[0]||''}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):s}
+function initials(s){var p=String(s||'').trim().split(/\s+/);return ((p[0]||'')[0]||'')+((p.length>1?p[p.length-1]:'')[0]||'')}
+function fmt(d,o){o=Object.assign({timeZone:TZ},o);return new Intl.DateTimeFormat('pt-BR',o).format(d)}
+function dayKey(d){return new Intl.DateTimeFormat('en-CA',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit'}).format(d)}
+function rid(){var a=new Uint8Array(9);crypto.getRandomValues(a);return b64u(a)}
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},2800)}
+function copy(text){
+  if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(text)}
+  return new Promise(function(res){var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy')}catch(e){}ta.remove();res()})
+}
+
+/* ---------- codificação do link (dados ficam após o #, nunca vão ao servidor) ---------- */
+function b64u(bytes){var s='';for(var i=0;i<bytes.length;i++)s+=String.fromCharCode(bytes[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+function unb64u(str){str=str.replace(/-/g,'+').replace(/_/g,'/');while(str.length%4)str+='=';var bin=atob(str),out=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out}
+function pipe(bytes,ts){return new Response(new Blob([bytes]).stream().pipeThrough(ts)).arrayBuffer().then(function(b){return new Uint8Array(b)})}
+function encode(obj){
+  var raw=new TextEncoder().encode(JSON.stringify(obj));
+  if('CompressionStream' in window){return pipe(raw,new CompressionStream('deflate-raw')).then(function(z){return 'z'+b64u(z)}).catch(function(){return 'j'+b64u(raw)})}
+  return Promise.resolve('j'+b64u(raw));
+}
+function decode(str){
+  var t=str.charAt(0),body=unb64u(str.slice(1));
+  var p=t==='z'?pipe(body,new DecompressionStream('deflate-raw')):Promise.resolve(body);
+  return p.then(function(b){return JSON.parse(new TextDecoder().decode(b))});
+}
+
+/* ---------- ícones ---------- */
+function icon(n,c){c=c||'currentColor';var P={
+  cal:'<rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 3v3M16 3v3"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4M9 2h6"/>',
+  video:'<rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/>',
+  check:'<path d="M5 12.5l4.2 4.2L19 7"/>',
+  chat:'<path d="M20 12a8 8 0 0 1-11.8 7L4 20l1.1-4A8 8 0 1 1 20 12z"/>',
+  building:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/>',
+  shield:'<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6l8-3z"/>',
+  play:'<path d="M8 5.5v13l11-6.5z" fill="'+c+'" stroke="none"/>',
+  arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',
+  repeat:'<path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5"/>',
+  link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'
+};return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[n]||'')+'</svg>'}
+
+/* ---------- conteúdo por contexto comercial ---------- */
+var NEXT=['Próximos passos','Se fizer sentido para o seu escritório, combinamos o caminho juntos.'];
+var CTX={
+  sped:{label:'Corretor de SPED',olhar:'a rotina de SPED e obrigações',
+    pontos:['Quanto tempo a equipe gasta validando e corrigindo arquivos antes de transmitir','Quais erros mais se repetem na sua carteira','Como a correção semiautomática funciona em um caso real'],
+    pauta:[['Seu escritório hoje','Equipe, carteira e como as obrigações são entregues.'],['Onde o SPED pesa','Validações, retificações e o retrabalho que mais se repete.'],['Correção na prática','A correção semiautomática rodando em um caso real.'],NEXT],
+    prio:['Reduzir o retrabalho no SPED','Diminuir o risco fiscal dos clientes','Entender investimento e implantação']},
+  simples:{label:'Motor do Simples',olhar:'a apuração das empresas do Simples',
+    pontos:['Como a apuração mensal das empresas do Simples é feita hoje','Onde fator R, anexos e sublimites consomem tempo da equipe','Como funciona a apuração e a transmissão em lote'],
+    pauta:[['Seu escritório hoje','Quantas empresas do Simples, quem apura e como é a rotina do mês.'],['Onde o tempo vai embora','Fator R, anexos, sublimites e as tarefas repetitivas.'],['O Motor do Simples na prática','Apuração e transmissão em lote em um caso real.'],NEXT],
+    prio:['Ganhar tempo na apuração mensal','Revisar enquadramento e fator R','Entender investimento e implantação']},
+  reforma:{label:'Reforma Tributária',olhar:'o impacto da Reforma Tributária na sua carteira',
+    pontos:['Como IBS, CBS e split payment mudam a carga dos seus clientes de 2027 a 2033','Quais clientes merecem uma simulação de regime primeiro','Como transformar a Reforma em serviço consultivo para o escritório'],
+    pauta:[['Sua carteira hoje','Regimes, segmentos e quais clientes mais sentem a mudança.'],['O que muda de 2027 a 2033','A transição traduzida para a realidade dos seus clientes.'],['Simulação na prática','Comparação entre regimes, ano a ano, para um perfil de cliente.'],NEXT],
+    prio:['Preparar a carteira para a Reforma','Criar um novo serviço de planejamento','Entender investimento e implantação']},
+  recuperacao:{label:'Recuperação de créditos',olhar:'as oportunidades de crédito na sua carteira',
+    pontos:['Onde podem existir créditos dos últimos 60 meses','Como o diagnóstico de oportunidades aponta o que vale a pena','Como apresentar a recuperação para o seu cliente'],
+    pauta:[['Sua carteira hoje','Regimes, segmentos e o histórico de revisões.'],['Onde podem existir créditos','Teses aplicáveis e a janela dos últimos 60 meses.'],['Diagnóstico na prática','Da análise à proposta para o seu cliente.'],NEXT],
+    prio:['Encontrar créditos para os clientes','Gerar receita extra para o escritório','Entender investimento e implantação']},
+  auditoria:{label:'Auditoria fiscal',olhar:'a rotina de revisão fiscal',
+    pontos:['Quais cruzamentos entre obrigações a equipe faz hoje','Onde estão as inconsistências que passam despercebidas','Como a auditoria automatizada entra na rotina sem pesar'],
+    pauta:[['Seu escritório hoje','Equipe, carteira e como a revisão fiscal é feita.'],['Onde está o risco','Cruzamentos entre obrigações e inconsistências recorrentes.'],['Auditoria na prática','Análises automáticas rodando em um caso real.'],NEXT],
+    prio:['Reduzir o risco fiscal dos clientes','Padronizar a revisão da equipe','Entender investimento e implantação']}
+};
+var DEFAULT_MSG='Oi, {nome}! Aqui é {closer}, da e-Auditoria. Antes de mostrar qualquer coisa, quero entender como funciona a rotina de vocês. Separei alguns pontos para a nossa conversa. Te espero lá!';
+
+function waUrl(num,msg){var d=String(num||'').replace(/\D/g,'');if(!d)return null;if(d.length<=11)d='55'+d;return 'https://wa.me/'+d+'?text='+enc(msg)}
+function relText(ms){var m=Math.max(1,Math.round(ms/6e4));if(m<60)return m+' min';var h=Math.floor(m/60),mm=m%60;if(h<24)return h+'h'+(mm?String(mm).padStart(2,'0'):'');var d=Math.floor(h/24),hh=h%24;return d+(d>1?' dias':' dia')+(hh?' e '+hh+'h':'')}
+function videoInfo(u){
+  if(!u)return null;var m=u.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{6,})/);
+  if(m)return {src:'https://www.youtube-nocookie.com/embed/'+m[1]+'?autoplay=1&rel=0&playsinline=1',thumb:'https://i.ytimg.com/vi/'+m[1]+'/hqdefault.jpg',frame:true};
+  m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);if(m)return {src:'https://player.vimeo.com/video/'+m[1]+'?autoplay=1&playsinline=1',frame:true};
+  if(/^https?:\/\//.test(u))return {src:u,frame:false};return null;
+}
+
+/* ---------- exemplo (claramente identificado) ---------- */
+function example(){
+  var x=new Date(Date.now()+2*864e5);
+  while(/Sat|Sun/.test(new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'short'}).format(x)))x=new Date(+x+864e5);
+  return {v:1,id:'exemplo',ex:1,n:'João Silva',e:'Escritório Contábil Silva',t:dayKey(x)+'T14:30:00-03:00',d:45,
+    tm:'https://teams.microsoft.com/l/meetup-join/exemplo',c:'simples',s:14,p:3,
+    q:'A apuração do Simples toma quase uma semana da equipe todo mês.',
+    cn:'Gilberto Jr.',cr:'Especialista e-Auditoria',cw:'5532900000000',sn:'Mariana',sw:'5532900000000'};
+}
+
+/* ================= PÁGINA DO CONTADOR ================= */
+function renderError(){
+  document.body.className='mode-page';
+  app.innerHTML='<div class="err"><h1>Link incompleto</h1><p>Não conseguimos abrir os detalhes desta reunião. Responda a mensagem em que recebeu o link e nossa equipe envia de novo.</p></div>';
+}
+
+function renderPage(D){
+  document.body.className='mode-page';clearInterval(timer);
+  var start=new Date(D.t);if(!D.t||isNaN(start))return renderError();
+  var ctx=CTX[D.c]||CTX.sped,dur=Math.max(10,+D.d||45),end=new Date(+start+dur*6e4);
+  var S={conf:null,prio:''},key='pme:c:'+(D.id||'x'),persist=!D.pv&&!D.ex;
+  if(persist){var sv=store.get(key);if(sv)S.conf=sv}
+  var nome=first(D.n)||'Olá',cf=first(D.cn)||'Nosso especialista',off=D.e?' ('+D.e+')':'';
+  var wd=fmt(start,{weekday:'long'}),dm=fmt(start,{day:'numeric',month:'long'});
+  var hm=fmt(start,{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).replace(':','h');
+  var longDate=wd+', '+dm;
+  var confirmTo=D.cw||D.sw,helpTo=D.sw||D.cw,sdrF=first(D.sn);
+
+  function phase(){var n=Date.now();if(n>=+end)return 'fim';if(n>=+start)return 'agora';if(n>=+start-15*6e4)return 'janela';return 'antes'}
+  function relDay(){var k=dayKey(start);if(k===dayKey(new Date()))return 'Hoje';if(k===dayKey(new Date(Date.now()+864e5)))return 'Amanhã';return cap(wd.split('-')[0])}
+  function confirmMsg(){return 'Olá, '+cf+'! Aqui é '+D.n+off+'. Confirmo minha presença na nossa reunião de '+longDate+', às '+hm+'.'+(S.prio?'\n\nO que mais quero levar da conversa: '+S.prio+'.':'')}
+  var reschedMsg='Olá! Aqui é '+D.n+off+'. Preciso remarcar a reunião de '+longDate+', às '+hm+'. Podemos ver outro horário?';
+  var doubtMsg='Olá! Aqui é '+D.n+off+'. Tenho uma dúvida sobre a reunião de '+longDate+', às '+hm+': ';
+  var helpMsg='Olá! Aqui é '+D.n+off+'. Não estou conseguindo entrar na reunião das '+hm+'. Pode me ajudar?';
+
+  /* agenda */
+  function z(d){return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'')}
+  var title='Reunião e-Auditoria · '+cf;
+  var details='Sua reunião com '+(D.cn||'a e-Auditoria')+'.\n\nEntrar: '+(D.tm||'')+'\n\nPágina da reunião: '+location.href;
+  var gcal='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+enc(title)+'&dates='+z(start)+'/'+z(end)+'&details='+enc(details)+'&location='+enc('Microsoft Teams');
+  function ics(){
+    function e(s){return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n')}
+    function fold(l){var o='';while(l.length>73){o+=l.slice(0,73)+'\r\n ';l=l.slice(73)}return o+l}
+    var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//e-Auditoria//Reuniao//PT-BR','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',
+      'UID:'+(D.id||rid())+'@reuniao','DTSTAMP:'+z(new Date()),'DTSTART:'+z(start),'DTEND:'+z(end),'SUMMARY:'+e(title),'DESCRIPTION:'+e(details),
+      'LOCATION:Microsoft Teams'].concat(D.tm?['URL:'+D.tm]:[]).concat(['BEGIN:VALARM','TRIGGER:-PT15M','ACTION:DISPLAY','DESCRIPTION:'+e('Sua reunião começa em 15 minutos'),'END:VALARM','END:VEVENT','END:VCALENDAR']);
+    var blob=new Blob([L.map(fold).join('\r\n')],{type:'text/calendar;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='reuniao-e-auditoria.ics';document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);
+  }
+  function calRow(){return '<div class="row"><a class="btn btn-ghost btn-sm" data-ext href="'+esc(gcal)+'" target="_blank" rel="noopener">'+icon('cal')+'Google Agenda</a><button class="btn btn-ghost btn-sm" type="button" data-ics>'+icon('cal')+'Outlook / Apple</button></div>'}
+  function reschedBtn(cls){
+    var href=D.rl||waUrl(confirmTo,reschedMsg);
+    if(!href)return '';
+    return '<a class="btn '+cls+'" data-ext href="'+esc(href)+'" target="_blank" rel="noopener">'+icon('repeat')+'Preciso remarcar</a>';
+  }
+  function doubtBtn(){var h=waUrl(helpTo,doubtMsg);return h?'<a class="btn btn-ghost btn-sm" data-ext href="'+esc(h)+'" target="_blank" rel="noopener">'+icon('chat')+'Tenho uma dúvida</a>':''}
+
+  function confirmHTML(){
+    var ph=phase();
+    if(ph==='fim')return '<h2>Remarcar</h2><h3>Não conseguiu participar?</h3><p class="sub">Sem problema. Vamos encontrar um novo horário com '+esc(cf)+'.</p>'+reschedBtn('btn-primary');
+    if(S.conf)return '<h2>Sua presença</h2><div class="success"><div class="ic">'+icon('check','#fff')+'</div><div><b>Presença confirmada</b><p>Perfeito! '+esc(cf)+' já está preparando tudo. Até '+esc(longDate)+', às '+hm+'.</p></div></div>'+
+      '<p class="label">Para não perder o horário, salve na sua agenda:</p>'+calRow()+
+      ((D.rl||confirmTo)?'<a class="textlink" data-ext href="'+esc(D.rl||waUrl(confirmTo,reschedMsg))+'" target="_blank" rel="noopener">Mudou algo? Remarcar →</a>':'');
+    var w=waUrl(confirmTo,confirmMsg());
+    var btn=w?'<a class="btn btn-primary" id="btnConfirm" href="'+esc(w)+'" target="_blank" rel="noopener">'+icon('check')+'Confirmar minha presença</a>'
+             :'<button class="btn btn-primary" id="btnConfirm" type="button">'+icon('check')+'Confirmar minha presença</button>';
+    var rb=reschedBtn('btn-ghost btn-sm'),db=doubtBtn();
+    return '<h2>Confirmação</h2><h3>Podemos contar com você?</h3><p class="sub">Uma pergunta rápida, opcional: o que é mais importante você levar dessa conversa?</p>'+
+      '<div class="opts" role="radiogroup">'+ctx.prio.map(function(p,i){return '<div class="opt"><input type="radio" name="prio" id="pr'+i+'" value="'+esc(p)+'"'+(S.prio===p?' checked':'')+'><label for="pr'+i+'">'+esc(p)+'</label></div>'}).join('')+'</div>'+
+      btn+(w?'<p class="hint">Abrimos o WhatsApp com a confirmação pronta. É só enviar.</p>':'')+
+      ((rb||db)?'<div class="row">'+rb+db+'</div>':'');
+  }
+  function barHTML(){
+    var ph=phase(),n=Date.now(),b,info;
+    if(ph==='janela'||ph==='agora'){
+      info='<small>'+(ph==='agora'?'Acontecendo agora':'Começa em')+'</small><strong>'+(ph==='agora'?'Entre já':relText(+start-n))+'</strong>';
+      b=D.tm?'<a class="btn btn-primary teams hot" data-ext href="'+esc(D.tm)+'" target="_blank" rel="noopener">'+icon('video')+'Entrar na reunião</a>':'';
+    }else if(ph==='fim'){
+      info='<small>Reunião</small><strong>Encerrada</strong>';b=reschedBtn('btn-primary');
+    }else if(S.conf){
+      info='<small>Confirmada · '+esc(relDay())+'</small><strong>'+hm+'</strong>';
+      b='<a class="btn btn-ghost" data-scroll href="#acesso">'+icon('cal')+'Salvar na agenda</a>';
+    }else{
+      info='<small>'+esc(relDay())+'</small><strong>'+hm+' · '+dur+' min</strong>';
+      b='<a class="btn btn-primary" data-scroll href="#confirmar">Confirmar presença'+icon('arrow')+'</a>';
+    }
+    return '<div class="bar-in"><div class="info">'+info+'</div>'+(b||'')+'</div>';
+  }
+  function statusPaint(){
+    var ph=phase(),n=Date.now(),bd=$('#badge'),ct=$('#count');if(!bd)return;
+    var map={antes:S.conf?['ok','Presença confirmada']:['','Aguardando sua confirmação'],janela:['live','Começa em breve'],agora:['live','Ao vivo agora'],fim:['','Encerrada']};
+    bd.className='badge '+map[ph][0];bd.innerHTML='<span class="dot"></span>'+map[ph][1];
+    ct.innerHTML=icon('timer','rgba(255,255,255,.8)')+(ph==='antes'?'Faltam <strong>'+relText(+start-n)+'</strong>':ph==='janela'?'Começa em <strong>'+relText(+start-n)+'</strong>':ph==='agora'?'<strong>Acontecendo agora</strong>':'Essa reunião já aconteceu');
+    $('#bar').innerHTML=barHTML();
+    var tb=$('#btnTeams');if(tb)tb.classList.toggle('hot',ph==='janela'||ph==='agora');
+  }
+  var lastPh=phase();
+  function paintDynamic(){$('#confirmar').innerHTML=confirmHTML();statusPaint()}
+
+  var vi=videoInfo(D.cv),cover=vi&&vi.thumb?vi.thumb:(D.cf||'');
+  var counts=[['s','no Simples'],['p','no Presumido'],['r','no Real']].filter(function(k){return +D[k[0]]>0});
+  var msg=((D.cm&&D.cm.trim())?D.cm:DEFAULT_MSG).replace(/\{nome\}/g,nome).replace(/\{closer\}/g,cf).replace(/\{escritorio\}/g,D.e||'seu escritório').replace(/e-Auditoria/g,'e\u2011Auditoria');
+
+  app.innerHTML=
+   (D.ex?'<div class="ribbon">Página de exemplo · dados fictícios · ações desativadas</div>':'')+
+   (D.pv?'<div class="ribbon">Pré-visualização · é assim que o contador vai ver</div>':'')+
+   '<div class="pg"><header class="hero"><div class="hero-in">'+
+     '<div class="top"><div class="wordmark"><i></i>e-Auditoria</div><span class="badge" id="badge"></span></div>'+
+     '<p class="eyebrow">Reunião preparada para você</p>'+
+     '<h1>'+esc(nome)+', sua reunião está preparada.</h1>'+
+     (D.e?'<div class="office">'+icon('building','#A9C6FF')+esc(D.e)+'</div>':'')+
+     '<p class="lead">Em '+dur+' minutos, vamos olhar '+esc(ctx.olhar)+' com você e mostrar só o que fizer sentido para a sua realidade.</p>'+
+     '<div class="meta">'+
+       '<div class="tile"><small>'+icon('cal','rgba(255,255,255,.6)')+'Data</small><b>'+esc(relDay())+', '+esc(fmt(start,{day:'numeric',month:'short'}).replace('.',''))+'</b></div>'+
+       '<div class="tile"><small>'+icon('clock','rgba(255,255,255,.6)')+'Horário</small><b>'+hm+' <span style="opacity:.6;font-weight:500">Brasília</span></b></div>'+
+       '<div class="tile"><small>'+icon('timer','rgba(255,255,255,.6)')+'Duração</small><b>'+dur+' minutos</b></div>'+
+       '<div class="tile"><small>'+icon('video','rgba(255,255,255,.6)')+'Onde</small><b>Microsoft Teams</b></div>'+
+     '</div><div class="count" id="count"></div>'+
+   '</div></header>'+
+   '<main class="wrap">'+
+     '<section class="card"><h2>Quem vai te receber</h2>'+
+       '<div class="spec"><div class="avatar">'+esc(initials(D.cn))+(D.cf?'<img src="'+esc(D.cf)+'" alt="" onerror="this.remove()">':'')+'</div>'+
+       '<div><b>'+esc(D.cn||'Especialista e-Auditoria')+'</b><span>'+esc(D.cr||'Especialista e-Auditoria')+'</span><div class="waiting">Vai conduzir sua reunião</div></div></div>'+
+       (vi?'<div class="video" id="video"><button class="vplay" type="button" aria-label="Assistir ao recado em vídeo">'+(cover?'<img class="cover" src="'+esc(cover)+'" alt="">':'')+'<span class="play">'+icon('play','#1A52B8')+'</span><span class="vlabel">Um recado rápido de '+esc(cf)+'</span></button></div>':'')+
+       '<div class="bubble">'+esc(msg)+'</div>'+
+     '</section>'+
+     '<section class="card"><h2>O que separamos para você</h2>'+
+       (counts.length?'<p class="label">Sua carteira, pelo que nos contou</p><div class="chips">'+counts.map(function(k){return '<div class="chip"><b>'+(+D[k[0]])+'</b><span>'+k[1]+'</span></div>'}).join('')+'</div>':'')+
+       (D.q?'<div class="quote"><small>Você nos contou</small><p>“'+esc(D.q)+'”</p></div>':'')+
+       '<p class="label">Por isso, vamos olhar com você:</p><ul class="checks">'+ctx.pontos.map(function(p){return '<li>'+esc(p)+'</li>'}).join('')+'</ul>'+
+     '</section>'+
+     '<section class="card"><h2>Pauta · '+dur+' minutos</h2><ol class="steps">'+ctx.pauta.map(function(s){return '<li><b>'+esc(s[0])+'</b>'+esc(s[1])+'</li>'}).join('')+'</ol>'+
+       '<div class="note">'+icon('shield','#1A52B8')+'<span>Sem apresentação genérica de funcionalidades. Se a solução não fizer sentido para o seu escritório, a gente diz com clareza.</span></div></section>'+
+     '<section class="card" id="confirmar">'+confirmHTML()+'</section>'+
+     '<section class="card" id="acesso"><h2>Acesso à reunião</h2>'+
+       (D.tm?'<a class="btn btn-primary teams" id="btnTeams" data-ext href="'+esc(D.tm)+'" target="_blank" rel="noopener">'+icon('video')+'Entrar na minha reunião</a>'
+            :'<span class="btn" aria-disabled="true">Link de acesso ainda não disponível</span>')+
+       '<p class="small">O botão fica em destaque 15 minutos antes. No computador, dá para entrar pelo navegador (Chrome ou Edge) sem instalar nada.</p>'+
+       '<div class="divider"></div><p class="label">Salvar na agenda, com lembrete 15 min antes</p>'+calRow()+
+     '</section>'+
+     '<section class="card" id="ajuda"><h2>Precisa de ajuda?</h2>'+
+       '<details><summary>Entrar pelo computador, sem instalar nada</summary><ol><li>Toque em “Entrar na minha reunião”.</li><li>Se o Teams oferecer o aplicativo, escolha “Continuar neste navegador”.</li><li>Digite seu nome e clique em “Ingressar agora”.</li></ol></details>'+
+       '<details><summary>Entrar pelo celular</summary><p>No celular, o Teams usa o aplicativo gratuito (App Store ou Google Play). Vale instalar antes do horário; depois é só tocar em “Entrar na minha reunião”.</p></details>'+
+       '<details><summary>Câmera e microfone</summary><p>Quando o navegador pedir, toque em “Permitir”. Se negou sem querer, clique no cadeado ao lado do endereço e libere câmera e microfone. A câmera é opcional.</p></details>'+
+       (helpTo?'<div class="row" style="margin-top:6px"><a class="btn btn-ghost btn-sm" data-ext href="'+esc(waUrl(helpTo,'Olá! Aqui é '+D.n+off+'. '))+'" target="_blank" rel="noopener">'+icon('chat')+'Falar com '+esc(sdrF||'a equipe')+'</a><a class="btn btn-ghost btn-sm" data-ext href="'+esc(waUrl(helpTo,helpMsg))+'" target="_blank" rel="noopener">'+icon('info')+'Não consegui entrar</a></div>'
+              :'<p class="small">Responda a mensagem em que recebeu este link que a equipe te ajuda.</p>')+
+     '</section>'+
+   '</main>'+
+   '<footer class="foot">Página exclusiva da sua reunião com a e-Auditoria.<br>As informações desta página ficam no próprio link e não são gravadas em banco de dados.</footer>'+
+   '</div><div class="bar" id="bar"></div>';
+
+  statusPaint();
+  timer=setInterval(function(){var p=phase();if(p!==lastPh){lastPh=p;paintDynamic()}else statusPaint()},20000);
+
+  app.onchange=function(e){if(e.target.name==='prio'){S.prio=e.target.value;var b=$('#btnConfirm');if(b&&b.tagName==='A')b.href=waUrl(confirmTo,confirmMsg())}};
+  app.onclick=function(e){
+    var a=e.target.closest('a,button');if(!a)return;
+    if(a.classList.contains('vplay')){
+      var box=$('#video');box.innerHTML=vi.frame?'<iframe src="'+esc(vi.src)+'" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen title="Recado em vídeo"></iframe>'
+        :'<video src="'+esc(vi.src)+'" controls autoplay playsinline'+(D.cf?' poster="'+esc(D.cf)+'"':'')+'></video>';return;
+    }
+    if(a.id==='btnConfirm'){
+      if(D.ex||a.tagName==='BUTTON')e.preventDefault();
+      if(D.ex)toast('Exemplo: no link real, o WhatsApp abre com a confirmação pronta.');
+      S.conf={at:Date.now(),prio:S.prio};if(persist)store.set(key,S.conf);
+      setTimeout(function(){paintDynamic();$('#confirmar').scrollIntoView({behavior:'smooth',block:'start'})},80);return;
+    }
+    if(a.hasAttribute('data-scroll')){e.preventDefault();var t=$(a.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'});return}
+    if(a.hasAttribute('data-ics')){e.preventDefault();if(D.ex)return toast('Exemplo: no link real, baixa o convite para Outlook/Apple.');ics();return}
+    if(a.hasAttribute('data-ext')&&D.ex){e.preventDefault();toast('Exemplo: ação desativada.');}
+  };
+}
+
+/* ================= GERADOR ================= */
+var FIELDS={dr:['n','e','t','d','tm','c','s','p','r','q'],cfg:['cn','cr','cw','cf','cv','cm','sn','sw','rl','base','from']};
+function renderGen(){
+  document.body.className='mode-gen';clearInterval(timer);app.onclick=null;app.onchange=null;
+  var cfg=Object.assign({cr:'Especialista e-Auditoria',from:'sdr',base:/^https?:/.test(HERE)?HERE:''},store.get('pme:cfg')||{});
+  var dr=Object.assign({d:45,c:'sped'},store.get('pme:draft')||{});if(!dr.id)dr.id=rid();
+  function f(id,lab,type,extra,full,help){return '<div class="f'+(full?' full':'')+'"><label for="g_'+id+'">'+lab+'</label>'+
+    (type==='textarea'?'<textarea id="g_'+id+'" '+(extra||'')+'></textarea>':type==='select'?'<select id="g_'+id+'">'+extra+'</select>':'<input id="g_'+id+'" type="'+type+'" '+(extra||'')+'>')+
+    (help?'<span class="help">'+help+'</span>':'')+'</div>'}
+  var R='<span class="req">*</span>';
+  app.innerHTML='<div class="gen">'+
+    '<div class="gen-head"><div><div class="k">Piloto · redução de no-show</div><h1>Página de reunião personalizada</h1>'+
+      '<p>Preencha o que o SDR já coletou. O contador não preenche nada: recebe uma página com o especialista, a pauta pensada para a carteira dele, confirmação em um toque e acesso direto ao Teams.</p>'+
+      '<div class="flow"><span><b>1</b>Preencha</span><span><b>2</b>Copie a mensagem</span><span><b>3</b>Envie no WhatsApp</span><span><b>4</b>Registre o resultado no HubSpot</span></div></div>'+
+      '<a class="btn btn-ghost btn-sm" style="width:auto" href="'+esc(HERE)+'#exemplo" target="_blank" rel="noopener">Ver página de exemplo</a></div>'+
+    '<div class="gen-main">'+
+      '<section class="card"><h2>Reunião</h2><div class="fgrid">'+
+        f('n','Nome do contador '+R,'text','placeholder="Ex.: João Silva" autocomplete="off"')+
+        f('e','Escritório','text','placeholder="Ex.: Escritório Contábil Silva" autocomplete="off"')+
+        f('t','Data e horário (Brasília) '+R,'datetime-local','step="300"')+
+        f('d','Duração (min)','number','min="10" max="120" step="5"',false,'Use a duração real. Prometer 30 e fazer 50 quebra a confiança.')+
+        f('tm','Link do Microsoft Teams '+R,'url','placeholder="https://teams.microsoft.com/l/meetup-join/…"',true)+
+        f('c','Contexto comercial','select',Object.keys(CTX).map(function(k){return '<option value="'+k+'">'+CTX[k].label+'</option>'}).join(''),true,'Define a pauta, os pontos e as opções de prioridade da página.')+
+        '<div class="suggest" id="suggest"><span id="sugText"></span><button type="button" id="sugBtn">Usar</button></div>'+
+      '</div></section>'+
+      '<section class="card"><h2>Carteira do contador <span class="tag">aparece na página</span></h2><div class="fgrid" style="grid-template-columns:repeat(3,1fr)">'+
+        f('s','Empresas no Simples','number','min="0" inputmode="numeric"')+f('p','Lucro Presumido','number','min="0" inputmode="numeric"')+f('r','Lucro Real','number','min="0" inputmode="numeric"')+
+        '</div><div class="fgrid" style="margin-top:12px">'+
+        f('q','O que o contador contou ao SDR <em>(opcional, aparece entre aspas)</em>','textarea','placeholder="Ex.: A apuração do Simples toma quase uma semana da equipe todo mês."',true,'Use as palavras dele. É o trecho que mais mostra que a equipe ouviu.')+
+      '</div></section>'+
+      '<section class="card"><h2>Especialista <span class="tag">salvo neste navegador</span></h2><div class="fgrid">'+
+        f('cn','Nome '+R,'text','placeholder="Ex.: Gilberto Jr."')+f('cr','Cargo','text','')+
+        f('cw','WhatsApp (recebe as confirmações) '+R,'tel','placeholder="32 9 9999-9999"')+f('cf','Foto (URL) <em>opcional</em>','url','placeholder="https://…/foto.jpg"')+
+        f('cv','Vídeo de boas-vindas (YouTube não listado, Vimeo ou .mp4) <em>opcional</em>','url','placeholder="https://youtu.be/…"',true,'Um vídeo de 15 a 20 s, reutilizável. A personalização vem do texto abaixo.')+
+        f('cm','Recado em texto','textarea','placeholder="'+esc(DEFAULT_MSG)+'"',true,'Variáveis: {nome}, {closer}, {escritorio}. Em branco usa o texto padrão.')+
+      '</div></section>'+
+      '<section class="card"><h2>SDR e envio <span class="tag">salvo neste navegador</span></h2><div class="fgrid">'+
+        f('sn','Nome do SDR','text','placeholder="Ex.: Mariana"')+f('sw','WhatsApp do SDR (ajuda técnica)','tel','placeholder="32 9 9999-9999"')+
+        f('from','Quem envia o link','select','<option value="sdr">SDR</option><option value="closer">Especialista</option>')+
+        f('rl','Link de remarcação <em>opcional</em>','url','placeholder="Agenda do HubSpot Meetings"',false,'Sem link, a remarcação abre o WhatsApp.')+
+        f('base','URL onde esta página está hospedada '+R,'url','placeholder="https://reuniao.suaempresa.com.br/"',true,'Aberta direto do computador, a página funciona para testar, mas o link não abre no celular do contador.')+
+      '</div></section>'+
+      '<section class="card protocol"><h2>Protocolo do piloto</h2><ol>'+
+        '<li><b>Linha de base:</b> anote o no-show das suas últimas reuniões no HubSpot antes de começar.</li>'+
+        '<li><b>Alterne sem escolher a dedo:</b> reuniões em dia par recebem a página, em dia ímpar seguem o processo atual (ou o inverso).</li>'+
+        '<li><b>Registre tudo no HubSpot:</b> resultado da reunião (realizada / no-show) e se recebeu a página.</li>'+
+        '<li><b>Compare os grupos inteiros,</b> não só quem confirmou. Confirmar não é comparecer.</li>'+
+      '</ol></section>'+
+    '</div>'+
+    '<aside class="gen-side">'+
+      '<div class="phone"><iframe id="pv" title="Pré-visualização da página"></iframe></div>'+
+      '<section class="card"><h2>Pronto para enviar?</h2><ul class="issues" id="issues"></ul>'+
+        '<p class="label">Mensagem para o WhatsApp</p><div class="msgbox" id="msg"></div>'+
+        '<div class="gen-actions" style="margin-top:10px"><button class="btn btn-primary btn-sm" type="button" id="cpMsg">'+icon('chat')+'Copiar mensagem</button><button class="btn btn-ghost btn-sm" type="button" id="cpLink">'+icon('link')+'Copiar só o link</button></div>'+
+        '<div class="linkbox" id="link" style="margin-top:12px"></div><div class="meta-line" id="linkMeta"></div>'+
+        '<div class="gen-actions" style="margin-top:12px"><button class="btn btn-ghost btn-sm" type="button" id="open">Abrir a página</button><button class="btn btn-ghost btn-sm" type="button" id="reset">Nova reunião</button></div>'+
+        '<div class="divider"></div><div class="privacy">'+icon('shield','#5E6E87')+'<span>Os dados da reunião ficam dentro do link, depois do “#”, parte que o navegador não envia ao servidor de hospedagem. Nada é gravado em banco. Os dados do especialista e do SDR ficam só neste navegador.</span></div>'+
+      '</section>'+
+    '</aside></div>';
+
+  FIELDS.dr.forEach(function(k){var el=$('#g_'+k);if(dr[k]!=null)el.value=dr[k]});
+  FIELDS.cfg.forEach(function(k){var el=$('#g_'+k);if(cfg[k]!=null)el.value=cfg[k]});
+  function v(k){var el=$('#g_'+k);return el?el.value.trim():''}
+  var state={link:'',msg:''},deb=null,lastPv='';
+
+  function build(){
+    var o={v:1,id:dr.id};
+    FIELDS.dr.concat(FIELDS.cfg).forEach(function(k){if(k==='base'||k==='from')return;var x=v(k);if(x!=='')o[k]=x});
+    if(o.t)o.t=o.t+':00-03:00';
+    ['d','s','p','r'].forEach(function(k){if(o[k]!=null){o[k]=+o[k];if(!o[k])delete o[k]}});
+    return o;
+  }
+  function save(){
+    FIELDS.dr.forEach(function(k){dr[k]=v(k)});FIELDS.cfg.forEach(function(k){cfg[k]=v(k)});
+    store.set('pme:draft',dr);store.set('pme:cfg',cfg);
+  }
+  function suggest(){
+    var s=+v('s')||0,pr=(+v('p')||0)+(+v('r')||0),sug=null,why='';
+    if(s>=10){sug='simples';why='10+ empresas no Simples'}else if(pr>0){sug='sped';why='atende Presumido/Real'}
+    var box=$('#suggest');
+    if(sug&&sug!==v('c')){$('#sugText').innerHTML='Pela sua regra de qualificação ('+why+'): <b>'+CTX[sug].label+'</b>';box.classList.add('on');box.dataset.s=sug}
+    else box.classList.remove('on');
+  }
+  function update(){
+    save();suggest();
+    var data=build(),base=v('base').replace(/#.*$/,'');
+    Promise.all([encode(data),encode(Object.assign({},data,{pv:1}))]).then(function(r){
+      var code=r[0],pv=r[1];
+      state.link=(base||'')+'#m='+code;
+      var src=HERE+'#m='+pv;if(src!==lastPv){lastPv=src;$('#pv').src=src}
+      $('#link').textContent=base?state.link:'(defina a URL de hospedagem)#m='+code;
+      $('#linkMeta').textContent=state.link.length+' caracteres';
+      var start=data.t?new Date(data.t):null,ok=start&&!isNaN(start);
+      var when=ok?fmt(start,{weekday:'long'})+', '+fmt(start,{day:'numeric',month:'long'})+', às '+fmt(start,{hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).replace(':','h'):'[data e horário]';
+      var nm=first(data.n)||'[nome]',cl=first(data.cn)||'[especialista]';
+      var who=v('from')==='closer'?'Preparei':cl+' preparou';
+      state.msg='Olá, '+nm+'! Tudo bem?\n\n'+who+' a página da nossa reunião de '+when+': a pauta, o que vamos olhar na sua carteira e o acesso ao Teams.\n\nConsegue confirmar por lá? Leva 10 segundos 👇\n'+(base?state.link:'[link]');
+      $('#msg').textContent=state.msg;
+      var I=[];
+      if(!data.n)I.push('Falta o nome do contador.');
+      if(!ok)I.push('Falta a data e o horário.');else if(+start<Date.now())I.push('O horário está no passado.');
+      if(!data.tm)I.push('Falta o link do Teams.');else if(!/^https:\/\/(teams\.microsoft\.com|teams\.live\.com)\//.test(data.tm))I.push('O link do Teams não parece oficial (teams.microsoft.com ou teams.live.com).');
+      if(!data.cn)I.push('Falta o nome do especialista.');
+      if(!data.cw&&!data.sw)I.push('Informe um WhatsApp para receber as confirmações.');
+      if(!base)I.push('Defina a URL de hospedagem. Sem ela, o link não abre no celular do contador.');
+      $('#issues').innerHTML=I.length?I.map(function(t){return '<li>'+esc(t)+'</li>'}).join(''):'<li class="good">Tudo certo. Copie a mensagem e envie no WhatsApp.</li>';
+    });
+  }
+  app.addEventListener('input',function(){clearTimeout(deb);deb=setTimeout(update,220)});
+  app.addEventListener('change',function(){clearTimeout(deb);deb=setTimeout(update,60)});
+  $('#sugBtn').onclick=function(){$('#g_c').value=$('#suggest').dataset.s;update()};
+  $('#cpMsg').onclick=function(){copy(state.msg).then(function(){toast('Mensagem copiada. Cole no WhatsApp.')})};
+  $('#cpLink').onclick=function(){copy(state.link).then(function(){toast('Link copiado.')})};
+  $('#open').onclick=function(){window.open(HERE+'#m='+state.link.split('#m=')[1],'_blank')};
+  $('#reset').onclick=function(){FIELDS.dr.forEach(function(k){$('#g_'+k).value=''});$('#g_d').value=45;$('#g_c').value='sped';dr={id:rid()};update();toast('Pronto para uma nova reunião.')};
+  update();
+}
+
+/* ---------- roteamento ---------- */
+function boot(){
+  var h=location.hash;
+  if(h.indexOf('#m=')===0){decode(h.slice(3)).then(renderPage).catch(renderError)}
+  else if(h==='#exemplo'||h==='#demo'){renderPage(example())}
+  else renderPage(example());
+}
+window.addEventListener('hashchange',boot);
+boot();
+})();
+</script>
+</body>
+</html>
